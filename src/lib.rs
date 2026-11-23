@@ -4295,11 +4295,14 @@ fn blend_px<const M: usize>(o: &mut Px, rgb: [f32; 3], a: f32) {
 fn blend_pm<const M: usize>(o: &mut Px, s: [f32; 3], a: f32) {
     match M {
         1 => {
-            // The reference clamps the straight colour at 1 after each particle (16 bpc: 8 orange glow
-            // spheres added stay orange (1, 0.85, 0.36) instead of burning to white)
+            // Truly additive: overlapping particles keep adding light, so a dense core glows hotter
+            // than its edge. The reference clamps the straight colour at 1 after each particle (its
+            // 8/16 bpc behaviour), which flattens dense areas into plateaus of the particles' own
+            // colour; EffectCraft hands helpers float buffers, so values above 1 survive to the
+            // host (a host at 8/16 bpc clips them at its output).
             o[3] += a * (1.0 - o[3]);
             for c in 0..3 {
-                o[c] = (o[c] + s[c]).min(o[3]);
+                o[c] += s[c];
             }
         }
         2 => {
@@ -5522,25 +5525,37 @@ mod tests {
         assert!(sphere(40.0, r, w) > 0.999 && sphere(101.0, r, w) == 0.0);
     }
 
-    /// ref G3 / G6: 8 orange glow spheres on one point; at the centre the sphere covers 1 and
-    /// the glow 0.25. Add with a Normal glow stays orange, Normal with an Add glow is the last
-    /// sphere plus its glow.
+    /// 8 orange glow spheres on one point; at the centre the sphere covers 1 and the glow 0.25.
+    /// Add keeps adding light (no cap at the particle's own colour, so a dense core gets hotter);
+    /// Normal with an Add glow is the last sphere plus its glow (ref G6).
     #[test]
     fn glow_composite() {
         let c = [1.0, 0.4, 0.1];
-        let stack = |f: &dyn Fn(&mut Px)| {
+        let stack = |n: usize, f: &dyn Fn(&mut Px)| {
             let mut o = [0.0; 4];
-            (0..8).for_each(|_| f(&mut o));
+            (0..n).for_each(|_| f(&mut o));
             o
         };
         let near = |a: Px, b: [f32; 4]| a.iter().zip(b).all(|(x, y)| (x - y).abs() < 0.006);
+        // (with an Add glow too: a Normal glow is laid over what's beneath it, not added)
+        let add = |o: &mut Px| put::<1>(o, c, 1.0, [1.0, 0.25], 1);
+        let (one, eight) = (stack(1, &add), stack(8, &add));
+        for ch in 0..3 {
+            assert!(
+                (eight[ch] - 8.0 * one[ch]).abs() < 1e-3 * eight[ch].max(1.0),
+                "{one:?} {eight:?}"
+            );
+        }
+        assert!(eight[0] > 1.0 && (eight[3] - 1.0).abs() < 1e-6, "{eight:?}");
+        // two Add particles of half coverage: light adds, coverage unites
+        let mut o = [0.0; 4];
+        blend_pm::<1>(&mut o, [0.25, 0.1, 0.0], 0.5);
+        blend_pm::<1>(&mut o, [0.25, 0.1, 0.0], 0.5);
+        assert!(near(o, [0.5, 0.2, 0.0, 0.75]), "{o:?}");
+        // Normal sphere then its Add glow on top: the last sphere's colour plus a quarter of it
         assert!(near(
-            stack(&|o| put::<1>(o, c, 1.0, [1.0, 0.25], 0)),
-            [1.0, 0.847, 0.361, 1.0]
-        ));
-        assert!(near(
-            stack(&|o| put::<0>(o, c, 1.0, [1.0, 0.25], 1)),
-            [1.0, 0.498, 0.125, 1.0]
+            stack(8, &|o| put::<0>(o, c, 1.0, [1.0, 0.25], 1)),
+            [1.25, 0.5, 0.125, 1.0]
         ));
     }
     /// The random-unit-gradient noise (with sin/cos per gradient) the turbulence was tuned with.
