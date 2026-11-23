@@ -2438,15 +2438,20 @@ fn emit(
             .then(|| {
                 let total: f32 = b.lights.iter().map(|l| l.intensity.max(0.0)).sum();
                 let mut x = r(19) * total;
-                b.lights.iter().find(|l| {
+                b.lights.iter().position(|l| {
                     x -= l.intensity.max(0.0);
                     x < 0.0
                 })
             })
             .flatten()
-            .or(b.lights.last().filter(|_| b.emitter_type == 4));
+            .or((b.emitter_type == 4 && !b.lights.is_empty()).then(|| b.lights.len() - 1));
+        // where that light was at the birth: along its way from the step's start (the lights come
+        // in the same order each step), so a moving light lays an even trail, not a clump a frame
         let base = match light {
-            Some(l) => l.pos,
+            Some(i) if a.lights.len() == b.lights.len() => {
+                lerp3(b.lights[i].pos, a.lights[i].pos, frac)
+            }
+            Some(i) => b.lights[i].pos,
             None => epos,
         };
         // On a Grid, Box and Sphere: the cell centre, (i + 0.5) / n of each size (ref GB1-GB5,
@@ -5159,6 +5164,79 @@ mod tests {
             st.ps
                 .iter()
                 .all(|q| (q.p[1] - 540.0).abs() < 1e-3 && q.p[2].abs() < 1e-3)
+        );
+    }
+
+    /// A moving emitter lays an even trail: 100 births a frame while it moves 50 px a frame, no
+    /// forces, so the particles sit 0.5 px apart along the path, across frame boundaries too.
+    #[test]
+    fn moving_emitter_trail_is_even() {
+        let mut f = defaults();
+        set(&mut f, "velocity", &[0.0]);
+        set(&mut f, "velocity_random", &[0.0]);
+        set(&mut f, "velocity_from_motion", &[0.0]);
+        set(&mut f, "air_resistance", &[0.0]);
+        set(&mut f, "rate", &[3000.0]);
+        set(&mut f, "life", &[1.0]);
+        let at = |x: f64| {
+            let mut g = f.clone();
+            set(&mut g, "position", &[x, 540.0, 0.0]);
+            Params::from_flat(&g)
+        };
+        let mut st = State::default();
+        for k in 0..20 {
+            step(
+                &mut st,
+                &at(50.0 * k as f64),
+                &at(50.0 * (k + 1) as f64),
+                1.0 / 30.0,
+            );
+        }
+        let mut xs: Vec<f32> = st.ps.iter().map(|q| q.p[0]).collect();
+        xs.sort_by(f32::total_cmp);
+        let gaps: Vec<f32> = xs.windows(2).map(|w| w[1] - w[0]).collect();
+        let worst = gaps.iter().cloned().fold(0.0f32, f32::max);
+        assert!(worst < 1.0, "largest gap {worst} px (expected about 0.5)");
+    }
+
+    /// The Light(s) emitter lays an even trail behind a moving light, as a moving emitter does:
+    /// the light moves 50 px a frame, 100 births a frame land 0.5 px apart along its path.
+    #[test]
+    fn moving_light_trail_is_even() {
+        let mut f = defaults();
+        set(&mut f, "emitter_type", &[4.0]);
+        set(&mut f, "emitter_size_x", &[0.0]);
+        set(&mut f, "emitter_size_y", &[0.0]);
+        set(&mut f, "emitter_size_z", &[0.0]);
+        set(&mut f, "velocity", &[0.0]);
+        set(&mut f, "velocity_random", &[0.0]);
+        set(&mut f, "air_resistance", &[0.0]);
+        set(&mut f, "rate", &[3000.0]);
+        set(&mut f, "life", &[1.0]);
+        let at = |x: f32| {
+            let mut p = Params::from_flat(&f);
+            p.lights = vec![EmitLight {
+                pos: [x, 540.0, 0.0],
+                intensity: 1.0,
+            }];
+            p
+        };
+        let mut st = State::default();
+        for k in 0..20 {
+            step(
+                &mut st,
+                &at(50.0 * k as f32),
+                &at(50.0 * (k + 1) as f32),
+                1.0 / 30.0,
+            );
+        }
+        let mut xs: Vec<f32> = st.ps.iter().map(|q| q.p[0]).collect();
+        xs.sort_by(f32::total_cmp);
+        let worst = xs.windows(2).map(|w| w[1] - w[0]).fold(0.0f32, f32::max);
+        assert!(
+            xs.len() > 1000 && worst < 1.0,
+            "largest gap {worst} px over {} particles",
+            xs.len()
         );
     }
 

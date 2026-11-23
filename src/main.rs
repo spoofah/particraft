@@ -674,10 +674,11 @@ fn render_req<I: Iterator<Item = std::io::Result<String>>>(
         }
         ps[i].sub_pos = inst.sub[k].clone();
     }
-    // Light(s): the lights where they are at each step's end
+    // Light(s): the lights where they are at each step's end, and at the first step's start, so a
+    // moving light's births spread along its path through each frame
     // ponytail: one callback per step (a jump asks once per frame stepped through)
     if ps[ps.len() - 1].emitter_type == 4 {
-        for (i, b) in ps.iter_mut().enumerate().skip(1) {
+        for (i, b) in ps.iter_mut().enumerate() {
             b.lights = io.comp_lights((lo + i) as f64 / fps)?;
         }
     }
