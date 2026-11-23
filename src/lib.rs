@@ -2663,18 +2663,13 @@ fn emit(
             rot: b.rot_z + b.rot_random * (2.0 * r(16) - 1.0) + turn,
             spin: b.spin * (1.0 + b.spin_random * (2.0 * r(17) - 1.0)),
         };
-        // Its part of the step: in a straight line at its speed (Linear, as fitted on the reference), or
-        // under the same forces as everyone (Position Subframe 10x), so particles born either
-        // side of a frame don't part when air resistance slows fast ones (90 px gaps at
-        // 1300 px/s, Air Resistance 0.5, otherwise)
+        // Its part of the step under the same forces as everyone (air resistance, wind, turbulence,
+        // gravity), so a stream stays continuous: moved in a straight line at its launch speed
+        // instead (the reference's Linear), particles born either side of a frame part and the
+        // stream breaks into dashes (90 px gaps at 1300 px/s, Air Resistance 0.5).
         // ponytail: no floor in that part of a step; a bounce waits for the next.
-        if b.subframe > 0 {
-            let t1 = (st.k + 1) as f32 * dt;
-            advance(&mut q, b, b.turbulence, b.air, b.gravity * GRAVITY, t1, age);
-        } else {
-            q.p = std::array::from_fn(|i| p0[i] + v[i] * age);
-            q.age = age;
-        }
+        let t1 = (st.k + 1) as f32 * dt;
+        advance(&mut q, b, b.turbulence, b.air, b.gravity * GRAVITY, t1, age);
         st.ps.push(q);
         if b.emitter_type == 3 {
             st.layer_uv.push(uv);
@@ -5164,6 +5159,37 @@ mod tests {
         );
     }
 
+    /// A fast stream under air resistance stays continuous: the particles born within a frame are
+    /// spaced like their neighbours across the frame boundaries, with no gap where one frame's
+    /// births meet the last's (a straight-line first step left ~90 px gaps here).
+    #[test]
+    fn stream_has_no_gaps_at_frame_boundaries() {
+        let mut f = defaults();
+        set(&mut f, "position", &[100.0, 540.0, 0.0]);
+        set(&mut f, "direction", &[1.0]);
+        set(&mut f, "direction_spread", &[0.0]);
+        set(&mut f, "y_rotation", &[90.0]);
+        set(&mut f, "velocity", &[1300.0]);
+        set(&mut f, "velocity_random", &[0.0]);
+        set(&mut f, "air_resistance", &[0.5]);
+        set(&mut f, "rate", &[300.0]);
+        set(&mut f, "life", &[1.0]);
+        let st = run(&f, 20);
+        let mut xs: Vec<f32> = st.ps.iter().map(|q| q.p[0]).collect();
+        xs.sort_by(f32::total_cmp);
+        let gaps: Vec<f32> = xs.windows(2).map(|w| w[1] - w[0]).collect();
+        assert!(gaps.len() > 100);
+        // spacing shrinks smoothly with age as drag slows the stream: no gap far above its neighbours
+        for i in 2..gaps.len() - 2 {
+            let around = (gaps[i - 2] + gaps[i - 1] + gaps[i + 1] + gaps[i + 2]) / 4.0;
+            assert!(
+                gaps[i] < 1.5 * around + 0.05,
+                "gap {i}: {} px, neighbours {around} px",
+                gaps[i]
+            );
+        }
+    }
+
     /// Gravity 100 without drag falls 100 px in the first second (ref P4 row 3).
     #[test]
     fn gravity_matches_reference() {
@@ -5440,8 +5466,10 @@ mod tests {
         set(&mut f, "layer_scale", &[100.0]);
         set(&mut f, "layer_rgb", &[3.0]);
         set(&mut f, "velocity", &[100.0]);
+        set(&mut f, "air_resistance", &[0.0]); // the launch speed itself, not drag on its first step
         let st = run(&f, 1);
         assert!(st.ps.iter().all(|q| (len3(q.v) - 100.0).abs() < 1e-3));
+        set(&mut f, "air_resistance", &[0.5]);
         set(&mut f, "emitter_behavior", &[0.0]);
         set(&mut f, "rate", &[16.0]);
         assert_eq!(run(&f, 30).ps.len(), 16);
