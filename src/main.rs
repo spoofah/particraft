@@ -686,8 +686,8 @@ fn render_req<I: Iterator<Item = std::io::Result<String>>>(
     if ps[last].lighting.is_some() {
         ps[last].shade = io.shade_lights(target as f64 / fps)?;
     }
-    // Shadowlets: the light named "Shadow..." (the reference's Light Naming default), ambient aside
-    if ps[last].shadowlets.is_some() {
+    // Self-Shadow: the light named "Shadow..." (the reference's Light Naming default), ambient aside
+    if ps[last].self_shadow.is_some() {
         ps[last].shadow_light = io
             .lights_named(target as f64 / fps, "Shadow")?
             .into_iter()

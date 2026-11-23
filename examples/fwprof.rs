@@ -41,7 +41,7 @@ fn main() {
             ],
         ),
         (
-            "smoke (16 cloudlets 120)",
+            "smoke (16 puffs 120)",
             3.0,
             &[
                 ("emitter_behavior", &[1.0]),

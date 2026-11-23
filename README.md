@@ -18,8 +18,8 @@ whatever order the frames come in.
   - Position Subframe, so a fast-moving emitter leaves a smooth trail.
 - **Particle types:**
   - Sphere and Glow Sphere, with their own blend modes and Glow Blend Mode.
-  - Star and Streaklet.
-  - Cloudlet (textured smoke).
+  - Star and Streaks.
+  - Puff (textured smoke).
   - Sprite: any layer, with rotation, Colorize / Fill and 11 time-sampling modes for animated sprites.
 - **Look:**
   - Size, opacity and colour over life.
@@ -30,17 +30,17 @@ whatever order the frames come in.
   - Air turbulence (a fractal wind field).
   - **Bounce** off a floor layer and two wall layers: Bounce, Slide, Stick or Kill, with friction,
     and particles come to rest.
-- **Aux system:** trails of secondary particles from each main particle, with their own life,
+- **Trails system:** trails of secondary particles from each main particle, with their own life,
   size, opacity and colour over life.
 - **Comp lights and camera:**
   - Lighting by the comp's point and spot lights.
-  - Shadowlets (soft self-shadowing for clouds).
+  - Self-Shadow (soft self-shadowing for clouds).
   - Drawing through the comp's camera layer, with the camera's depth of field.
 - **Motion blur:** for particles, sprites and a moving camera.
 
 148 controls, in 19 twirl-down groups: Emitter (with 3D Model, Layer Emitter, Distribution),
-Particle (Sprite, Rotation, Glow, Streaklet), Physics (Air Turbulence, Bounce 1–3), Aux System,
-Lighting, Shadowlets and Rendering (Motion Blur).
+Particle (Sprite, Rotation, Glow, Streaks), Physics (Air Turbulence, Bounce 1–3), Trails,
+Lighting, Self-Shadow and Rendering (Motion Blur).
 
 ## Install
 
@@ -67,7 +67,7 @@ into EffectCraft; until your EffectCraft has them, PartiCraft falls back as belo
 |---|---|
 | A render cache keyed on time for helper effects ([#3786](https://github.com/storytold/effectcraft/pull/3786)) | On a layer with nothing animated, the particles freeze on their first frame. Work-around: add the expression `time*0.001` to Physics ▸ Air Turbulence ▸ Evolution Offset. |
 | Grouped controls ([#3751](https://github.com/storytold/effectcraft/pull/3751)) | The controls show as one flat list. Projects keep their values either way. |
-| Layer transforms, comp camera and comp lights ([#3788](https://github.com/storytold/effectcraft/pull/3788)) | No drawing through a camera layer or depth of field; no Lighting, Light(s) emitter or Shadowlets light; Floor Position / Rotation / Width / Height stand in for a Floor Layer; Bounce 2 and 3 do nothing; a Layer emitter sits at Position and uses the Layer Rotation / Scale controls. |
+| Layer transforms, comp camera and comp lights ([#3788](https://github.com/storytold/effectcraft/pull/3788)) | No drawing through a camera layer or depth of field; no Lighting, Light(s) emitter or Self-Shadow light; Floor Position / Rotation / Width / Height stand in for a Floor Layer; Bounce 2 and 3 do nothing; a Layer emitter sits at Position and uses the Layer Rotation / Scale controls. |
 | Gradient parameters ([#3789](https://github.com/storytold/effectcraft/pull/3789)) | Color over Life blends from Color to Gradient End Color instead of following a gradient. |
 | Bounded generator renders and several helper processes ([#3790](https://github.com/storytold/effectcraft/pull/3790)) | Everything renders the same, just slower in projects with many PartiCraft layers. |
 

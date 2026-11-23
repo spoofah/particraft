@@ -40,12 +40,12 @@ fn main() {
             ],
         ),
         (
-            "30k/s + shadowlets",
+            "30k/s + self-shadows",
             &[
                 ("rate", 30000.0),
                 ("size", 2.0),
                 ("velocity", 300.0),
-                ("shadowlets", 1.0),
+                ("self_shadow", 1.0),
             ],
         ),
         (
@@ -67,7 +67,7 @@ fn main() {
             ],
         ),
         (
-            "2k/s cloudlets size 20",
+            "2k/s puffs size 20",
             &[
                 ("rate", 2000.0),
                 ("particle_type", 2.0),
@@ -86,7 +86,7 @@ fn main() {
             ],
         ),
         (
-            "5k/s streaklets (7) + mb",
+            "5k/s streak particles (7) + mb",
             &[
                 ("rate", 5000.0),
                 ("particle_type", 5.0),

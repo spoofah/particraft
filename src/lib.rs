@@ -288,14 +288,7 @@ pub const DEFS: &[Def] = &[
         "Particle",
         "Particle Type",
         Popup(
-            &[
-                "Sphere",
-                "Glow Sphere",
-                "Cloudlet",
-                "Sprite",
-                "Star",
-                "Streaklet",
-            ],
+            &["Sphere", "Glow Sphere", "Puff", "Sprite", "Star", "Streaks"],
             0,
         ),
     ),
@@ -469,20 +462,20 @@ pub const DEFS: &[Def] = &[
     ),
     d(
         "streak_count",
-        "Particle/Streaklet",
+        "Particle/Streaks",
         "Number of Streaks",
         Slider(7.0, 1.0, 1000.0, 50.0),
     ),
     d(
         "streak_size",
-        "Particle/Streaklet",
+        "Particle/Streaks",
         "Streak Size",
         Slider(60.0, 0.0, 1000.0, 200.0),
     ),
     d(
         "streak_seed",
-        "Particle/Streaklet",
-        "Streaklet Random Seed",
+        "Particle/Streaks",
+        "Streaks Random Seed",
         Slider(0.0, 0.0, 100_000.0, 1000.0),
     ),
     d(
@@ -715,151 +708,146 @@ pub const DEFS: &[Def] = &[
     ),
     d(
         "aux_emit",
-        "Aux System",
+        "Trails",
         "Emit",
         Popup(&["Off", "Continuously"], 0),
     ),
     d(
         "aux_start",
-        "Aux System",
+        "Trails",
         "Start Emit [% of Life]",
         Slider(0.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_stop",
-        "Aux System",
+        "Trails",
         "Stop Emit [% of Life]",
         Slider(100.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_rate",
-        "Aux System",
+        "Trails",
         "Particles/sec",
         Slider(10.0, 0.0, 100_000.0, 1000.0),
     ),
     d(
         "aux_velocity",
-        "Aux System",
+        "Trails",
         "Particle Velocity",
         Slider(0.0, -100_000.0, 100_000.0, 1000.0),
     ),
     d(
         "aux_inherit",
-        "Aux System",
+        "Trails",
         "Inherit Main Velocity [%]",
         Slider(0.0, -1000.0, 1000.0, 100.0),
     ),
     d(
         "aux_life",
-        "Aux System",
+        "Trails",
         "Life [sec]",
         Slider(0.5, 0.0, 1000.0, 10.0),
     ),
     d(
         "aux_life_random",
-        "Aux System",
+        "Trails",
         "Life Random [%]",
         Slider(0.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_type",
-        "Aux System",
+        "Trails",
         "Type",
-        Popup(&["Sphere", "Glow Sphere", "Cloudlet"], 0),
+        Popup(&["Sphere", "Glow Sphere", "Puff"], 0),
     ),
     d(
         "aux_feather",
-        "Aux System",
+        "Trails",
         "Feather",
         Slider(30.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_size",
-        "Aux System",
+        "Trails",
         "Size",
         Slider(5.0, 0.0, 10_000.0, 100.0),
     ),
     d(
         "aux_size_random",
-        "Aux System",
+        "Trails",
         "Size Random [%]",
         Slider(0.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_size_over_life",
-        "Aux System",
+        "Trails",
         "Size over Life",
         Popup(CURVES, 1),
     ),
     d(
         "aux_opacity",
-        "Aux System",
+        "Trails",
         "Opacity",
         Slider(50.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_opacity_random",
-        "Aux System",
+        "Trails",
         "Opacity Random [%]",
         Slider(0.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_opacity_over_life",
-        "Aux System",
+        "Trails",
         "Opacity over Life",
         Popup(CURVES, 1),
     ),
     d(
         "aux_set_color",
-        "Aux System",
+        "Trails",
         "Set Color",
         Popup(&["At Start", "Over Life", "Random from Gradient"], 0),
     ),
-    d(
-        "aux_color",
-        "Aux System",
-        "Color",
-        Color([1.0, 1.0, 1.0, 1.0]),
-    ),
+    d("aux_color", "Trails", "Color", Color([1.0, 1.0, 1.0, 1.0])),
     d(
         "aux_end_color",
-        "Aux System",
+        "Trails",
         "Gradient End Color",
         Color([1.0, 0.3, 0.0, 1.0]),
     ),
     d(
         "aux_color_over_life",
-        "Aux System",
+        "Trails",
         "Color over Life",
         Gradient(&[[0.0, 1.0, 1.0, 1.0], [1.0, 1.0, 0.3, 0.0]]),
     ),
     d(
         "aux_color_from_main",
-        "Aux System",
+        "Trails",
         "Color From Main [%]",
         Slider(0.0, 0.0, 100.0, 100.0),
     ),
     d(
         "aux_blend_mode",
-        "Aux System",
+        "Trails",
         "Blend Mode",
         Popup(&["Normal", "Add", "Screen", "Lighten"], 0),
     ),
     d(
         "aux_gravity",
-        "Aux System",
+        "Trails",
         "Gravity",
         Slider(0.0, -100_000.0, 100_000.0, 1000.0),
     ),
     d(
         "aux_air_resistance",
-        "Aux System",
+        "Trails",
         "Air Resistance",
         Slider(0.0, 0.0, 100.0, 10.0),
     ),
     d(
         "aux_turbulence",
-        "Aux System",
+        "Trails",
         "Turbulence Position",
         Slider(0.0, 0.0, 10_000.0, 1000.0),
     ),
@@ -890,46 +878,46 @@ pub const DEFS: &[Def] = &[
         "Diffuse",
         Slider(80.0, 0.0, 1000.0, 100.0),
     ),
-    // The reference's Shadowlets: each particle's soft shadow darkens the particles behind it
+    // Self-Shadow: each particle's soft shadow darkens the particles behind it
     d(
-        "shadowlets",
-        "Shadowlets",
-        "Enable Shadowlets",
+        "self_shadow",
+        "Self-Shadow",
+        "Enable Self-Shadow",
         Check(false),
     ),
     d(
-        "shadowlet_softness",
-        "Shadowlets",
+        "shadow_softness",
+        "Self-Shadow",
         "Softness",
         Slider(60.0, 0.0, 100.0, 100.0),
     ),
     d(
-        "shadowlet_color",
-        "Shadowlets",
-        "Shadowlet Color",
+        "shadow_color",
+        "Self-Shadow",
+        "Shadow Color",
         Color([0.0, 0.0, 0.0, 1.0]),
     ),
     d(
-        "shadowlet_color_strength",
-        "Shadowlets",
+        "shadow_color_strength",
+        "Self-Shadow",
         "Color Strength",
         Slider(100.0, 0.0, 100.0, 100.0),
     ),
     d(
-        "shadowlet_opacity",
-        "Shadowlets",
-        "Shadowlet Opacity",
+        "shadow_opacity",
+        "Self-Shadow",
+        "Shadow Opacity",
         Slider(5.0, 0.0, 100.0, 100.0),
     ),
     d(
-        "shadowlet_size",
-        "Shadowlets",
+        "shadow_size",
+        "Self-Shadow",
         "Adjust Size",
         Slider(100.0, 0.0, 1000.0, 400.0),
     ),
     d(
-        "shadowlet_distance",
-        "Shadowlets",
+        "shadow_distance",
+        "Self-Shadow",
         "Adjust Distance",
         Slider(100.0, 0.0, 1000.0, 400.0),
     ),
@@ -1008,7 +996,7 @@ pub fn manifest(gradients: bool) -> Value {
     json!({
         "api": 2, "id": ID, "name": "PartiCraft", "category": "Simulation",
         "version": env!("CARGO_PKG_VERSION"), "author": "Spoofah",
-        "description": "A 3D particle system: point, box and sphere emitters, gravity, air resistance, wind and turbulence, sphere, glow and cloudlet particles seen through the default comp camera.",
+        "description": "A 3D particle system: point, box, sphere, layer, light, text and model emitters; gravity, air resistance, wind, turbulence and bounce; sphere, glow, puff, sprite, star and streak particles; trails, lighting, self-shadow, depth of field and motion blur.",
         "params": params,
     })
 }
@@ -1078,7 +1066,7 @@ pub struct Params {
     pub glow_opacity: f32,
     pub glow_feather: f32,
     pub glow_blend: usize,
-    /// Streaklet: dots per particle, their size (fraction) and the pattern's seed
+    /// Streaks: dots per particle, their size (fraction) and the pattern's seed
     pub streak_count: usize,
     pub streak_size: f32,
     pub streak_seed: u64,
@@ -1106,9 +1094,9 @@ pub struct Params {
     pub lighting: Option<Lighting>,
     /// the comp's lights for Lighting at the frame drawn (placed by the helper)
     pub shade: Vec<ShadeLight>,
-    /// Shadowlets (off: None)
-    pub shadowlets: Option<Shadowlets>,
-    /// the light shadowlets fall away from: the comp light named "Shadow..." at the frame drawn
+    /// Self-Shadow (off: None)
+    pub self_shadow: Option<SelfShadow>,
+    /// the light self-shadows fall away from: the comp light named "Shadow..." at the frame drawn
     /// (placed by the helper); None: one at the camera
     pub shadow_light: Option<ShadeLight>,
     /// Depth of Field: Camera Settings (the camera layer's, when it has it on)
@@ -1124,7 +1112,7 @@ pub struct Params {
     pub layer_still: bool,
     /// Text/Mask, Emit From Edges: only the layer's outline emits (emitter_type is then 3)
     pub edges: bool,
-    /// drawing Cloudlets as the built-in cloud texture (render: ptype is then 3)
+    /// drawing Puffs as the built-in cloud texture (render: ptype is then 3)
     pub cloud: bool,
     /// 3D Model: the mesh (loaded by the helper from OBJ File) and Emit From (0 vertices,
     /// 1 edges, 2 faces)
@@ -1151,7 +1139,7 @@ pub struct Params {
     pub rot_random: f32,
     pub spin: f32,
     pub spin_random: f32,
-    /// Aux System: particles each main particle emits along its path
+    /// Trails: particles each main particle emits along its path
     pub aux_on: bool,
     /// emission window as fractions of the main particle's life
     pub aux_window: [f32; 2],
@@ -1369,13 +1357,13 @@ impl Params {
                 nominal: (u("light_falloff") == 1).then(|| f("nominal_distance").max(0.0)),
             }),
             shade: Vec::new(),
-            shadowlets: (f("shadowlets") > 0.5).then(|| Shadowlets {
-                softness: pc("shadowlet_softness").clamp(0.0, 1.0),
-                color: v3("shadowlet_color"),
-                strength: pc("shadowlet_color_strength").clamp(0.0, 1.0),
-                opacity: pc("shadowlet_opacity").clamp(0.0, 1.0),
-                size: pc("shadowlet_size").max(0.0),
-                distance: pc("shadowlet_distance").max(0.0),
+            self_shadow: (f("self_shadow") > 0.5).then(|| SelfShadow {
+                softness: pc("shadow_softness").clamp(0.0, 1.0),
+                color: v3("shadow_color"),
+                strength: pc("shadow_color_strength").clamp(0.0, 1.0),
+                opacity: pc("shadow_opacity").clamp(0.0, 1.0),
+                size: pc("shadow_size").max(0.0),
+                distance: pc("shadow_distance").max(0.0),
             }),
             shadow_light: None,
             mb_samples: if u("motion_blur") == 1 {
@@ -1427,7 +1415,7 @@ impl Params {
             color: self.aux_color,
             end_color: self.aux_end_color,
             gradient: self.aux_gradient.clone(),
-            shadowlets: None,
+            self_shadow: None,
             blend: self.aux_blend,
             ..self.clone()
         }
@@ -1482,7 +1470,7 @@ pub struct Particle {
 pub struct State {
     pub k: u64,
     pub ps: Vec<Particle>,
-    /// the Aux System's particles
+    /// the trails' particles
     pub aux: Vec<Particle>,
     acc: f64,
     next_id: u64,
@@ -2277,9 +2265,9 @@ pub struct Lighting {
     pub nominal: Option<f32>,
 }
 
-/// Shadowlets' settings (fractions: 1 = 100%).
+/// Self-Shadow's settings (fractions: 1 = 100%).
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Shadowlets {
+pub struct SelfShadow {
     pub softness: f32,
     pub color: [f32; 3],
     pub strength: f32,
@@ -2288,7 +2276,7 @@ pub struct Shadowlets {
     pub distance: f32,
 }
 
-/// A shadowlet's radius and its offset away from the light, in particle radii at Adjust Size and
+/// A self-shadow's radius and its offset away from the light, in particle radii at Adjust Size and
 /// Adjust Distance 100% (fitted on the reference's clouds SH5-SH11).
 const SHADOW_SIZE: f32 = 2.5;
 const SHADOW_DIST: f32 = 1.5;
@@ -3122,7 +3110,7 @@ struct Dot {
     spin: f32,
     /// sprites out of focus: the Gaussian blur's sigma (buffer px)
     blur: f32,
-    /// a shadowlet: darkens what is drawn before it (rgb: its colour, a: its opacity, w: the
+    /// a self-shadow: darkens what is drawn before it (rgb: its colour, a: its opacity, w: the
     /// soft edge's width)
     shadow: bool,
 }
@@ -3415,7 +3403,7 @@ fn shape(d: &Dot, b: &Params, dist: f32) -> [f32; 2] {
     }
 }
 
-/// A Streaklet's pattern, the same for every particle: per dot its offset in particle radii
+/// A Streaks particle's pattern, the same for every particle: per dot its offset in particle radii
 /// and its size as a share of the centre dot's. Measured on reference renders (refs SK1–SK9):
 /// one dot at the centre, 0.615 × Size × Streak Size in radius with the sphere's feather (Streak
 /// Size 30/60/100); the others spread like a ball of radius Size seen from the front (median
@@ -3423,7 +3411,7 @@ fn shape(d: &Dot, b: &Params, dist: f32) -> [f32; 2] {
 /// (total alpha of 30 dots: The reference 1414–1561, here 1453–1616 over four seeds); moving with motion
 /// blur they smear into parallel streaks. The pattern itself is the reference's own random, so
 /// only these statistics are matched.
-fn streaklet(b: &Params) -> Vec<[f32; 3]> {
+fn streak_pattern(b: &Params) -> Vec<[f32; 3]> {
     (0..b.streak_count as u64)
         .map(|k| {
             if k == 0 {
@@ -3660,10 +3648,10 @@ pub fn render(
     }
 }
 
-/// The cloud texture's half width in sizes (ref CL3: a Size 40 cloudlet is gone by 1.6 x Size).
+/// The cloud texture's half width in sizes (ref CL3: a Size 40 puff is gone by 1.6 x Size).
 const CLOUD_EXTENT: f32 = 1.9;
 
-/// Cloudlets drawn as sprites of the built-in cloud texture: the particle's colour through it
+/// Puffs drawn as sprites of the built-in cloud texture: the particle's colour through it
 /// (Fill), always its one frame.
 fn cloud_look(b: &Params) -> Option<Params> {
     (b.ptype == 2).then(|| Params {
@@ -3676,9 +3664,9 @@ fn cloud_look(b: &Params) -> Option<Params> {
 }
 
 /// The cloud texture (built once): a lumpy puff, a core lobe and seven around it, each solid
-/// inside with a smoothstep edge, merged, with a little fine grain. The reference's cloudlet is a
+/// inside with a smoothstep edge, merged, with a little fine grain. The reference's puff is a
 /// lumpy puff like it (CL1-CL3); this texture is our own, its average over each circle fitted on
-/// The reference's Size 40 cloudlet (CL3: solid to 1.1 x Size, gone by 1.6 x). 256 px = 2 x CLOUD_EXTENT sizes.
+/// The reference's Size 40 puff (CL3: solid to 1.1 x Size, gone by 1.6 x). 256 px = 2 x CLOUD_EXTENT sizes.
 fn cloud_sprites() -> &'static Sprites {
     static S: std::sync::OnceLock<Sprites> = std::sync::OnceLock::new();
     S.get_or_init(|| {
@@ -3776,15 +3764,15 @@ fn render_pass(
             d.y.max(ey) + d.reach,
         ]
     };
-    // Streaklet: each particle is a fixed pattern of sphere dots (one dot for other types)
+    // Streaks: each particle is a fixed pattern of sphere dots (one dot for other types)
     let pattern = if b.ptype == 5 {
-        streaklet(b)
+        streak_pattern(b)
     } else {
         vec![[0.0, 0.0, 1.0]]
     };
     let (m, pattern) = (pattern.len(), &pattern);
-    // shadowlets: the light they fall away from (default: at the camera's eye)
-    let shadows = b.shadowlets;
+    // self-shadow: the light they fall away from (default: at the camera's eye)
+    let shadows = b.self_shadow;
     let eye = match cam {
         Some(c) => camera_eye(&c.m),
         None => [cx, cy, -zoom],
@@ -4040,7 +4028,7 @@ fn render_pass(
                 let bb = bbox(d);
                 d.keep = bb[1] >= 0.0 && bb[0] <= w as f32 && bb[3] >= 0.0 && bb[2] <= h as f32;
             }
-            // its shadowlet: a soft disk SHADOW_SIZE x its radius x Adjust Size, SHADOW_DIST x its
+            // its self-shadow: a soft disk SHADOW_SIZE x its radius x Adjust Size, SHADOW_DIST x its
             // radius x Adjust Distance away from the light, drawn at its own depth so it darkens
             // the particles behind it (and its own particle when the light is behind that)
             if let (Some(sh), Some(sd)) = (shadows, ds.get_mut(m)) {
@@ -4661,8 +4649,8 @@ fn sprite_rows_blur<const M: usize>(
     });
 }
 
-/// A shadowlet over rows `y0..y1`: a disk flat inside, then a smoothstep to nothing over its soft
-/// edge, darkening the colour already drawn towards its own (alpha kept: The reference draws no shadowlets
+/// A self-shadow over rows `y0..y1`: a disk flat inside, then a smoothstep to nothing over its soft
+/// edge, darkening the colour already drawn towards its own (alpha kept: The reference draws no self-shadows
 /// on the background, SH3, SH4).
 fn shadow_rows(c: &Ctx, d: &Dot, rows: &mut [Px], y_base: usize, y0: usize, y1: usize) {
     let w = c.w;
@@ -4924,7 +4912,7 @@ mod tests {
     /// in focus or with the camera's depth of field off.
     /// Bounded drawing (EffectCraft's `frame_bounds`): whatever the buffer held, the pixels inside
     /// the returned bounds are the full drawing's, and the full drawing is transparent outside
-    /// them (spheres with aux trails and motion blur, glow, cloudlets, a burst off to one side).
+    /// them (spheres with aux trails and motion blur, glow, puffs, a burst off to one side).
     #[test]
     fn bounded_drawing_matches_the_full_frame() {
         let (w, h) = (320, 200);
@@ -5296,9 +5284,9 @@ mod tests {
     }
 
     /// A Star at R = 50 (ref ST2): solid core, rays 10 px wide at R, 5 px at 2R, gone at 3R;
-    /// a Streaklet's pattern: the centre dot first, the rest in the unit ball at 0.2–0.75 size.
+    /// a Streaks particle's pattern: the centre dot first, the rest in the unit ball at 0.2–0.75 size.
     #[test]
-    fn star_and_streaklet() {
+    fn star_and_streaks() {
         let d = Dot {
             r: 50.0,
             w: 3.1 + 6.0,
@@ -5316,7 +5304,7 @@ mod tests {
         assert_eq!(width(150.0), 0.0);
         let mut f = defaults();
         set(&mut f, "streak_count", &[30.0]);
-        let pat = streaklet(&Params::from_flat(&f));
+        let pat = streak_pattern(&Params::from_flat(&f));
         assert_eq!((pat.len(), pat[0]), (30, [0.0, 0.0, 1.0]));
         assert!(
             pat[1..]
