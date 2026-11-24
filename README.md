@@ -16,8 +16,8 @@ whatever order the frames come in.
 
 ## Features
 
-Items marked † use host features that EffectCraft 0.24.1 doesn't offer yet; see
-[On EffectCraft 0.24.1](#on-effectcraft-0241) for what they do there.
+Items marked † use host features that EffectCraft 0.24.1 and 0.25.1 don't offer yet; see
+[On EffectCraft 0.24.1 and 0.25.1](#on-effectcraft-0241-and-0251) for what they do there.
 
 - **Emitters:** Point, Box, Sphere, Layer (emits from a layer's pixels, takes their colour, and can
   turn their colour into size, velocity or rotation), Light(s)†, Text/Mask outlines or fills, and 3D
@@ -72,20 +72,20 @@ Releases have Windows x64 and Linux x64 builds. The Linux build renders the same
 Windows one in EffectCraft's command-line renderer on Ubuntu (under WSL); the Linux desktop app
 hasn't been tried yet. On macOS, build it from source (below); that build hasn't been tested.
 
-## On EffectCraft 0.24.1
+## On EffectCraft 0.24.1 and 0.25.1
 
-Everything not marked † works fully in EffectCraft 0.24.1. Three things to know:
+Everything not marked † works fully in EffectCraft 0.24.1 and 0.25.1. Three things to know:
 
-- **A layer with nothing animated freezes.** EffectCraft 0.24.1 reuses a layer's frame when none
-  of its properties change, so the particles stop on their first frame. Give the layer one thing
-  that changes every frame: the expression `time*0.001` on Physics ▸ Air Turbulence ▸ Evolution
+- **A layer with nothing animated freezes.** EffectCraft reuses a layer's frame when none of its
+  properties change, so the particles stop on their first frame. Give the layer one thing that
+  changes every frame: the expression `time*0.001` on Physics ▸ Air Turbulence ▸ Evolution
   Offset does it without changing the look.
 - **Work at 32 bits per channel for dense Add.** At 8 or 16 bits, where many Add particles overlap
   the light clips to white; at 32 bits it keeps its colour and builds smoothly.
-- **The † features need more from the host than 0.24.1 gives a helper.** There, PartiCraft falls
-  back as follows:
+- **The † features need more from the host than these versions give a helper.** There, PartiCraft
+  falls back as follows:
 
-| Feature | On 0.24.1 |
+| Feature | On 0.24.1 and 0.25.1 |
 |---|---|
 | Drawing through the comp camera, depth of field, camera motion blur | The comp's default view, sharp. |
 | Lighting | Off: particles keep their own colours. |
