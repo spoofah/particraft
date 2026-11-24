@@ -10,8 +10,11 @@ whatever order the frames come in.
 
 ## Features
 
+Items marked † use host features that EffectCraft 0.24.1 doesn't offer yet; see
+[On EffectCraft 0.24.1](#on-effectcraft-0241) for what they do there.
+
 - **Emitters:** Point, Box, Sphere, Layer (emits from a layer's pixels, takes their colour, and can
-  turn their colour into size, velocity or rotation), Light(s), Text/Mask outlines or fills, and 3D
+  turn their colour into size, velocity or rotation), Light(s)†, Text/Mask outlines or fills, and 3D
   Model (an OBJ file's vertices, edges or faces).
   - Continuous or Explode, with five direction modes.
   - Distribution on a grid, with four sequencing types.
@@ -22,25 +25,27 @@ whatever order the frames come in.
   - Puff (textured smoke).
   - Sprite: any layer, with rotation, Colorize / Fill and 11 time-sampling modes for animated sprites.
 - **Look:**
-  - Size, opacity and colour over life.
+  - Size and opacity over life; colour over life from two colours, or from a gradient†.
   - Colour random.
-  - Normal, Add, Screen and Lighten blend modes.
+  - Normal, Add, Screen and Lighten blend modes. Add is truly additive: where particles overlap,
+    the light keeps building, so a dense core glows hotter than its edge.
 - **Physics:**
   - Gravity, air resistance and wind.
   - Air turbulence (a fractal wind field).
-  - **Bounce** off a floor layer and two wall layers: Bounce, Slide, Stick or Kill, with friction,
-    and particles come to rest.
+  - **Bounce** off a floor and two walls: Bounce, Slide, Stick or Kill, with friction, and particles
+    come to rest. The floor is set by its own controls, or is a comp layer†; the walls are comp
+    layers†.
 - **Trails system:** trails of secondary particles from each main particle, with their own life,
   size, opacity and colour over life.
-- **Comp lights and camera:**
+- **Comp lights and camera†:**
   - Lighting by the comp's point and spot lights.
   - Self-Shadow (soft self-shadowing for clouds).
   - Drawing through the comp's camera layer, with the camera's depth of field.
-- **Motion blur:** for particles, sprites and a moving camera.
+- **Motion blur:** for particles and sprites, and for a moving camera†.
 
-148 controls, in 19 twirl-down groups: Emitter (with 3D Model, Layer Emitter, Distribution),
-Particle (Sprite, Rotation, Glow, Streaks), Physics (Air Turbulence, Bounce 1–3), Trails,
-Lighting, Self-Shadow and Rendering (Motion Blur).
+148 controls, in 19 groups: Emitter (with 3D Model, Layer Emitter, Distribution), Particle (Sprite,
+Rotation, Glow, Streaks), Physics (Air Turbulence, Bounce 1–3), Trails, Lighting, Self-Shadow and
+Rendering (Motion Blur). They show as twirl-downs where the host groups them†, as one list otherwise.
 
 ## Install
 
@@ -58,18 +63,33 @@ WebAssembly plug-ins only.
 Releases are Windows x64 builds. On Linux or macOS, build it from source (below); those builds
 haven't been tested yet.
 
-## Which EffectCraft
+## On EffectCraft 0.24.1
 
-PartiCraft works with EffectCraft 0.24.1. Some features need host features that are on their way
-into EffectCraft; until your EffectCraft has them, PartiCraft falls back as below.
+Everything not marked † works fully in EffectCraft 0.24.1. Three things to know:
 
-| Needs | Without it |
+- **A layer with nothing animated freezes.** EffectCraft 0.24.1 reuses a layer's frame when none
+  of its properties change, so the particles stop on their first frame. Give the layer one thing
+  that changes every frame: the expression `time*0.001` on Physics ▸ Air Turbulence ▸ Evolution
+  Offset does it without changing the look.
+- **Work at 32 bits per channel for dense Add.** At 8 or 16 bits, where many Add particles overlap
+  the light clips to white; at 32 bits it keeps its colour and builds smoothly.
+- **The † features need more from the host than 0.24.1 gives a helper.** There, PartiCraft falls
+  back as follows:
+
+| Feature | On 0.24.1 |
 |---|---|
-| A render cache keyed on time for helper effects ([#3786](https://github.com/storytold/effectcraft/pull/3786)) | On a layer with nothing animated, the particles freeze on their first frame. Work-around: add the expression `time*0.001` to Physics ▸ Air Turbulence ▸ Evolution Offset. |
-| Grouped controls ([#3751](https://github.com/storytold/effectcraft/pull/3751)) | The controls show as one flat list. Projects keep their values either way. |
-| Layer transforms, comp camera and comp lights ([#3788](https://github.com/storytold/effectcraft/pull/3788)) | No drawing through a camera layer or depth of field; no Lighting, Light(s) emitter or Self-Shadow light; Floor Position / Rotation / Width / Height stand in for a Floor Layer; Bounce 2 and 3 do nothing; a Layer emitter sits at Position and uses the Layer Rotation / Scale controls. |
-| Gradient parameters ([#3789](https://github.com/storytold/effectcraft/pull/3789)) | Color over Life blends from Color to Gradient End Color instead of following a gradient. |
-| Bounded generator renders and several helper processes ([#3790](https://github.com/storytold/effectcraft/pull/3790)) | Everything renders the same, just slower in projects with many PartiCraft layers. |
+| Drawing through the comp camera, depth of field, camera motion blur | The comp's default view, sharp. |
+| Lighting | Off: particles keep their own colours. |
+| Light(s) emitter | Emits nothing: there are no lights to emit from. |
+| Self-Shadow | Shadows fall away from the viewer instead of from a light named "Shadow". |
+| Floor layer and wall layers for Bounce | Floor Position / Rotation / Width / Height place the floor; Bounce 2 and 3 do nothing. |
+| A Layer emitter's own position, rotation and scale | It sits at Position; Layer X / Y / Z Rotation and Layer Scale turn and size it. |
+| Colour over life from a gradient | From Color to Gradient End Color. |
+| Grouped controls | One flat list. |
+
+PartiCraft already supports all of these when a host provides them. EffectCraft is moving to a new
+plugin system shared by the Craft apps; PartiCraft will follow it, and the † features will come with
+it.
 
 ## Build
 
@@ -96,8 +116,8 @@ state before it: the 16 most recent states per layer are kept, because EffectCra
 out of order across its workers. Parameter changes behind the playhead are caught by sampling the
 parameter history, so an edit re-simulates from where it takes effect.
 
-Drawing is split into bands of rows over all cores. Generator layers report the rectangle they drew, so
-EffectCraft composites only that.
+Drawing is split into bands of rows over all cores. Where the host asks for it, PartiCraft reports
+the rectangle it drew, so only that is composited.
 
 ## Licence
 
