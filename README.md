@@ -1,5 +1,11 @@
 # PartiCraft
 
+[![PartiCraft feature demo (128 s video)](media/poster.jpg)](media/particraft_demo.mp4)
+
+▶ [Watch the feature demo](media/particraft_demo.mp4) (128 s, 720p, with sound): every particle
+rendered by PartiCraft in EffectCraft, in an EffectCraft build that also provides the host features
+marked † below.
+
 A 3D particle system for [EffectCraft](https://github.com/storytold/effectcraft): emitters, physics,
 sprites, lighting and motion blur, as one effect. It runs as a native **effect helper**, a separate
 program that EffectCraft starts and renders through. It uses every core and draws tens of thousands
