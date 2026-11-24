@@ -58,16 +58,18 @@ Rendering (Motion Blur). They show as twirl-downs where the host groups them†,
 PartiCraft is a native program, so it isn't in EffectCraft's Plug-in Library, which carries
 WebAssembly plug-ins only.
 
-1. Download `effectcraft-helper-particraft.exe` from the
-   [latest release](https://github.com/spoofah/particraft/releases/latest) and check it against
-   `SHA256SUMS`.
-2. Close EffectCraft and copy the exe into the `helpers` folder beside `effectcraft.exe`.
+1. Download `effectcraft-helper-particraft.exe` (Windows x64) or `effectcraft-helper-particraft`
+   (Linux x64) from the [latest release](https://github.com/spoofah/particraft/releases/latest)
+   and check it against `SHA256SUMS`.
+2. Close EffectCraft and copy the file into the `helpers` folder beside the EffectCraft program
+   (or into a folder named in the environment variable `EFFECTCRAFT_HELPER_PATH`). On Linux, make
+   it executable: `chmod +x effectcraft-helper-particraft`.
 3. Start EffectCraft and choose **Effect ▸ Scan for Effect Helpers**. To start helpers every time
    EffectCraft launches, set the environment variable `EFFECTCRAFT_HELPERS=1`.
 4. Apply **Simulation ▸ PartiCraft** to a solid.
 
-Releases are Windows x64 builds. On Linux or macOS, build it from source (below); those builds
-haven't been tested yet.
+Releases have Windows x64 and Linux x64 builds; the Linux build hasn't been tested in EffectCraft
+yet. On macOS, build it from source (below); that build hasn't been tested either.
 
 ## On EffectCraft 0.24.1
 
