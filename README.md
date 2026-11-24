@@ -68,8 +68,9 @@ WebAssembly plug-ins only.
    EffectCraft launches, set the environment variable `EFFECTCRAFT_HELPERS=1`.
 4. Apply **Simulation ▸ PartiCraft** to a solid.
 
-Releases have Windows x64 and Linux x64 builds; the Linux build hasn't been tested in EffectCraft
-yet. On macOS, build it from source (below); that build hasn't been tested either.
+Releases have Windows x64 and Linux x64 builds. The Linux build renders the same frames as the
+Windows one in EffectCraft's command-line renderer on Ubuntu (under WSL); the Linux desktop app
+hasn't been tried yet. On macOS, build it from source (below); that build hasn't been tested.
 
 ## On EffectCraft 0.24.1
 
